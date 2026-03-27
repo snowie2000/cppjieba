@@ -1,28 +1,28 @@
-PROJECT(CPPJIEBA)
+cmake_minimum_required(VERSION 3.10)
+project(cppjieba VERSION 5.0.3 LANGUAGES CXX)
 
-CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+# 1. Include the limonp project
+# This will process deps/limonp/CMakeLists.txt
+# It will create a target (likely named 'limonp')
+add_subdirectory(deps/limonp)
 
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/deps
-  ${PROJECT_SOURCE_DIR}/include)
+# 2. Create the cppjieba INTERFACE library
+add_library(cppjieba INTERFACE)
+add_library(cppjieba::cppjieba ALIAS cppjieba)
 
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "/usr/local/cppjieba" CACHE PATH "default install path" FORCE )
-endif()
+# 3. Link cppjieba to limonp
+# Note: Verify that the target name in deps/limonp/CMakeLists.txt is 'limonp'.
+# If it's different, change 'limonp' here to that name.
+target_link_libraries(cppjieba INTERFACE limonp)
 
-ADD_DEFINITIONS(-O3 -Wall -g)
-IF(APPLE) # mac os
-    ADD_DEFINITIONS(-std=c++0x)
-endif()
+# 4. Define include directories
+# We need 'include' for cppjieba's own headers.
+# We often need 'deps' because cppjieba headers do: #include "limonp/xxx.hpp"
+target_include_directories(cppjieba INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/deps>
+        $<INSTALL_INTERFACE:include>
+)
 
-# cmake .. -DENC=GBK
-# IF (DEFINED ENC)
-#     ADD_DEFINITIONS(-DCPPJIEBA_${ENC})
-# ENDIF()
-
-ADD_SUBDIRECTORY(deps)
-ADD_SUBDIRECTORY(test)
-
-ENABLE_TESTING()
-ADD_TEST(NAME ./test/test.run COMMAND ./test/test.run)
-ADD_TEST(NAME ./load_test COMMAND ./load_test)
-ADD_TEST(NAME ./demo COMMAND ./demo)
+# 5. Ensure C++11 is used across the board
+target_compile_features(cppjieba INTERFACE cxx_std_11)
