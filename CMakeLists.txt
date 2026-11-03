@@ -24,5 +24,6 @@ target_include_directories(cppjieba INTERFACE
         $<INSTALL_INTERFACE:include>
 )
 
+target_compile_definitions(cppjieba INTERFACE NOMINMAX)
 # 5. Ensure C++11 is used across the board
 target_compile_features(cppjieba INTERFACE cxx_std_11)

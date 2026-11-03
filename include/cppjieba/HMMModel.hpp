@@ -32,7 +32,7 @@ struct HMMModel {
     }
     void LoadModel(const string& filePath) {
         ifstream ifile;
-        OpenInputFile(ifs, filePath);
+        OpenInputFile(ifile, filePath);
         XCHECK(ifile.is_open()) << "open " << filePath << " failed";
         string line;
         vector<string> tmp;
