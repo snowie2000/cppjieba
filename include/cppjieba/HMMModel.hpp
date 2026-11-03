@@ -1,6 +1,7 @@
 #pragma once
 
 #include "limonp/StringUtil.hpp"
+#include "UnicodeFile.hpp"
 
 namespace cppjieba {
 
@@ -30,7 +31,8 @@ struct HMMModel {
     ~HMMModel() {
     }
     void LoadModel(const string& filePath) {
-        ifstream ifile(filePath.c_str());
+        ifstream ifile;
+        OpenInputFile(ifs, filePath);
         XCHECK(ifile.is_open()) << "open " << filePath << " failed";
         string line;
         vector<string> tmp;

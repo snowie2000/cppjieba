@@ -13,6 +13,7 @@
 #include "limonp/Logging.hpp"
 #include "Unicode.hpp"
 #include "DatTrie.hpp"
+#include "UnicodeFile.hpp"
 
 namespace cppjieba {
 
@@ -103,7 +104,8 @@ public:
         vector<string> files = limonp::Split(filePaths, "|;");
 
         for (size_t i = 0; i < files.size(); i++) {
-            ifstream ifs(files[i].c_str());
+            ifstream ifs;
+            OpenInputFile(ifs, files[i]);
             XCHECK(ifs.is_open()) << "open " << files[i] << " failed";
             string line;
 
@@ -150,7 +152,8 @@ private:
     }
 
     void LoadDefaultDict(const string& filePath) {
-        ifstream ifs(filePath.c_str());
+        ifstream ifs;
+        OpenInputFile(ifs, filePath);
         XCHECK(ifs.is_open()) << "open " << filePath << " failed.";
         string line;
         vector<string> buf;

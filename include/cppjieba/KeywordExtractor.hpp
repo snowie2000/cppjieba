@@ -93,7 +93,8 @@ public:
     }
 private:
     void LoadIdfDict(const string& idfPath) {
-        ifstream ifs(idfPath.c_str());
+        ifstream ifs;
+        OpenInputFile(ifs, idfPath);
         if(not ifs.is_open()){
             return ;
         }
@@ -130,7 +131,8 @@ private:
         assert(idfAverage_ > 0.0);
     }
     void LoadStopWordDict(const string& filePath) {
-        ifstream ifs(filePath.c_str());
+        ifstream ifs;
+        OpenInputFile(ifs, filePath);
         if(not ifs.is_open()){
             return ;
         }
